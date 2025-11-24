@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:view>
+	<h:head>
+		<title>Create</title>
+	</h:head>
+	<h:body>
+		<h1>CreateRides</h1>
+		<h:form>
+			<table>
+				<tr>
+					<td>Depart city:</td>
+					<td><h:inputText id="departCity"
+							value="#{createRide.departCity}"></h:inputText></td>
+				</tr>
+				<tr>
+					<td>Arrival city:</td>
+					<td><h:inputText id="arrivalCity"
+							value="#{createRide.arrivalCity}"></h:inputText></td>
+				</tr>
+				<tr>
+					<td>Number of seats:</td>
+					<td><h:inputText id="nSeats"
+							value="#{createRide.numberOfSeats}"></h:inputText></td>
+				</tr>
+				<tr>
+					<td>Price:</td>
+					<td><h:inputText id="price" value="#{createRide.price}"></h:inputText></td>
+				</tr>
+				<tr>
+					<!-- <td>Data (yyyy/MM/dd):</td>
+<td><h:inputText id="data" value="#{login.data}">
+<f:convertDateTime pattern="yyyy/MM/dd"/>
+</h:inputText></td>
+<td> <h:message for="data" style="color:red" /> </td>
+-->
+					<td>Ride date</td> 
+					<td><p:calendar id="data" value="#{createRide.date}"
+							navigator="false" mode="inline">
+						</p:calendar></td>
+				</tr>
+			</table>
+			<br />
+			<h:messages globalOnly="true" showDetail="true" showSummary="true" style="color:red;" />
+			<h:commandButton value="Create Ride" action="#{createRide.createRideAction}" />
+			<h:commandButton value="Back" action="Menu" />
+		</h:form>
+	</h:body>
+</f:view>
+</html>

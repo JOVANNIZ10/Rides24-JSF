@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:view>
+	<h:head>
+		<title>Create</title>
+	</h:head>
+	<h:body>
+		<h1>QueryRides</h1>
+		<h:form>
+			<table>
+				<tr>
+					<td>Depart city:</td>
+					<td><h:inputText id="departCity"
+							value="#{queryRideBean.departCity}"></h:inputText></td>
+				</tr>
+				<tr>
+					<td>Arrival city:</td>
+					<td><h:inputText id="arrivalCity"
+							value="#{queryRideBean.arrivalCity}"></h:inputText></td>
+				</tr>
+				<tr>
+					<!-- <td>Data (yyyy/MM/dd):</td>
+<td><h:inputText id="data" value="#{login.data}">
+<f:convertDateTime pattern="yyyy/MM/dd"/>
+</h:inputText></td>
+<td> <h:message for="data" style="color:red" /> </td>
+-->
+					<td>Ride date</td>
+					<td><p:calendar id="data" value="#{queryRideBean.date}"
+							navigator="false" mode="inline">
+						</p:calendar></td>
+				</tr>
+			</table>
+			<h:messages style="color:red" />
+			<h:commandButton value="Query Ride"
+				action="#{queryRideBean.queryRides}" />
+			<h:commandButton value="Back" action="Menu" />
+
+		</h:form>
+
+		<h:dataTable value="#{queryRideBean.rides}" var="ride" border="1"
+			rendered="#{not empty queryRideBean.rides}">
+
+			<h:column>
+				<f:facet name="header">From</f:facet>
+        #{ride.from}
+    </h:column>
+
+			<h:column>
+				<f:facet name="header">To</f:facet>
+        #{ride.to}
+    </h:column>
+
+			<h:column>
+				<f:facet name="header">Date</f:facet>
+				<h:outputText value="#{ride.date}">
+					<f:convertDateTime pattern="yyyy/MM/dd" />
+				</h:outputText>
+			</h:column>
+
+		</h:dataTable>
+
+
+	</h:body>
+</f:view>
+</html>
