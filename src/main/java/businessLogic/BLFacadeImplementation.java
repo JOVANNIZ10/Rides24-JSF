@@ -52,7 +52,7 @@ public class BLFacadeImplementation implements BLFacade {
 	@Override
 	public List<Ride> getRides(String departingCity, String arrivalCity, Date rideDate) {
 		dbManager.open();
-		List<Ride> rides = dbManager.getRidesByValues(departingCity, arrivalCity, rideDate);
+		List<Ride> rides = dbManager.getRides(departingCity, arrivalCity, rideDate);
 		dbManager.close();
 		return rides;
 	}
@@ -82,17 +82,29 @@ public class BLFacadeImplementation implements BLFacade {
 		dbManager.close();
 		return d;
 	}
+	public List<Driver> getDrivers(){
+		dbManager.open();
+		List<Driver> d = dbManager.getDrivers();
+		dbManager.close();
+		return d;
+	}
+	public List<Ride> getRidesByDriverEmail(String email){
+		dbManager.open();
+		List<Ride> d = dbManager.getRidesByDriverEmail(email);
+		dbManager.close();
+		return d;
+	}
 
-	/*
+	
 	@Override
-	public User register(String email, String name, String password, boolean isDriver) throws UserAlreadyRegistered {
-		dataAccess.open();
+	public User register(String email, String name, String surname, String password, boolean isDriver) throws ErabiltzaileaDagoenekoErregistratutaException {
+		dbManager.open();
 		try {
-			User u = dataAccess.register(email, name, password, isDriver);
-			dataAccess.close();
+			User u = dbManager.register(email, name,surname, password, isDriver);
+			dbManager.close();
 			return u;
-		} catch(UserAlreadyRegistered e) {
-			dataAccess.close();
+		} catch(ErabiltzaileaDagoenekoErregistratutaException e) {
+			dbManager.close();
 			throw e;
 		}
 	}
@@ -105,5 +117,5 @@ public class BLFacadeImplementation implements BLFacade {
 		dbManager.close();
 		return u;
 	}
-	*/
+	
 }

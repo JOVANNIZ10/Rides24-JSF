@@ -9,6 +9,10 @@ import javax.persistence.*;
 
 @Entity
 public class Ride implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id 
 	@GeneratedValue
 	private Integer rideNumber;

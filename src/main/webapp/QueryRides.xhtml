@@ -7,65 +7,373 @@
 	xmlns:p="http://primefaces.org/ui">
 <f:view>
 	<h:head>
-		<title>Create</title>
+		<title>Query Rides - Rides24</title>
+		
+		<h:outputStylesheet>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&amp;display=swap');
+        </h:outputStylesheet>
+
+		<style type="text/css">
+			/* PALETA DE COLORES */
+			:root {
+				--bg: #f5f7fa; 
+				--panel: #ffffff; 
+				--text: #333333; 
+				--muted: #666666; 
+				--outline: #e0e0e0; 
+				--outline-focus: #1a73e8; 
+				--btn-text: #ffffff; 
+				--btn-bg: #1a73e8; 
+				--btn-hover-bg: #155cb0; 
+				--error: #e74c3c; 
+			}
+
+			/* Estilos Generales */
+			* {
+				box-sizing: border-box;
+				font-family: 'Poppins', sans-serif;
+			}
+			
+			body {
+				background-color: var(--bg);
+				color: var(--text);
+				margin: 0;
+				padding: 100px;
+				display: flex;
+				justify-content: center;
+				min-height: 100vh;
+			}
+			
+			/* --- CONTENEDOR PRINCIPAL CON FLEXBOX (Dividir la pantalla) --- */
+			.main-layout {
+				width: 100%;
+				max-width: 1200px; /* Aumentamos el ancho máximo */
+				display: flex;
+				gap: 30px; /* Espacio entre el buscador y los resultados */
+				align-items: flex-start; /* Alinear arriba */
+			}
+			
+			/* Contenedor del Buscador (Izquierda) */
+			.search-sidebar {
+				flex-basis: 470px; /* Ancho fijo para el buscador */
+				flex-shrink: 0; /* No se encoge */
+				background-color: var(--panel);
+				border-radius: 12px;
+				box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+				padding: 30px;
+			}
+
+			/* Contenedor de Resultados (Centro/Derecha) */
+			.results-area {
+				flex-grow: 1; /* Ocupa el espacio restante */
+			}
+			
+			h1 {
+				color: var(--text);
+				font-size: 24px;
+				margin-bottom: 24px;
+				font-weight: 700;
+				text-align: center;
+			}
+			
+			/* Formulario y Inputs */
+			.form-table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-bottom: 20px;
+			}
+			
+			.form-table td {
+				padding: 10px 0;
+				vertical-align: middle;
+			}
+			
+			.form-table td:first-child {
+				font-weight: 500;
+				color: var(--muted);
+				width: 100%; /* En sidebar, la etiqueta va arriba */
+				display: block;
+				padding-bottom: 4px;
+			}
+			
+			.inputText, .ui-calendar {
+				width: 100%;
+				padding: 10px 14px;
+				border: 1px solid var(--outline);
+				border-radius: 8px;
+				font-size: 15px;
+				color: var(--text);
+				transition: border-color 0.2s ease, box-shadow 0.2s ease;
+				box-sizing: border-box;
+			}
+			
+			.inputText:focus {
+				outline: none;
+				border-color: var(--outline-focus);
+				box-shadow: 0 0 0 1px var(--outline-focus);
+			}
+
+			/* Calendar specific styles */
+			.ui-calendar { background: #f7f7f7; }
+			.ui-datepicker {
+				border: 1px solid var(--outline) !important;
+				border-radius: 8px !important;
+				box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1) !important;
+				font-size: 14px;
+				margin-top: 10px; /* Espacio para el input de fecha */
+			}
+			
+			/* Botones */
+			.button-container {
+				display: flex;
+				gap: 15px;
+				margin: 30px 0 0;
+				justify-content: center;
+			}
+			
+			.commandButton {
+				padding: 12px 24px;
+				font-size: 16px;
+				font-weight: 600;
+				border: none;
+				border-radius: 8px;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				color: var(--btn-text);
+				min-width: 140px;
+				background: var(--btn-bg); /* Azul principal */
+				width: 100%; /* Botón de búsqueda ocupa todo el ancho */
+			}
+			
+			.commandButton:hover {
+				background: var(--btn-hover-bg);
+				transform: translateY(-1px);
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			}
+			
+			/* Mensajes Globales */
+			.global-messages {
+				padding: 0;
+				margin: 15px 0;
+			}
+			
+			.global-messages li {
+				list-style: none;
+				padding: 12px 20px;
+				margin: 8px 0;
+				border-radius: 6px;
+				font-weight: 500;
+				border: 1px solid;
+				color: var(--error);
+				background-color: #fcebeb;
+				border-color: #f5c2c7;
+			}
+
+			/* --- ESTILO DE TARJETAS DE VIAJE (RIDE CARDS) --- */
+			.rides-list {
+				/* Eliminamos grid, ahora es un flujo de bloques */
+				display: flex; 
+				flex-direction: column;
+				gap: 20px;
+			}
+			
+			.ride-card {
+				background: var(--panel);
+				border: 1px solid var(--outline);
+				border-radius: 12px;
+				padding: 20px;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+				overflow: hidden;
+			}
+			
+			.ride-card:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+			}
+
+			.ride-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 15px;
+				border-bottom: 1px dashed #eee;
+				padding-bottom: 10px;
+			}
+
+			.ride-date {
+				font-size: 14px;
+				font-weight: 600;
+				color: var(--btn-bg);
+				background-color: #e6f7ff;
+				padding: 4px 10px;
+				border-radius: 4px;
+			}
+
+			.ride-route {
+				display: flex;
+				align-items: center;
+				font-size: 20px;
+				font-weight: 700;
+				color: var(--text);
+			}
+
+			.ride-route .city {
+				flex: 1;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+			}
+			
+			.ride-route .arrow {
+				margin: 0 10px;
+				font-size: 18px;
+				color: var(--muted);
+			}
+			
+			.ride-details {
+				margin-top: 15px;
+				font-size: 14px;
+				color: var(--muted);
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 10px;
+			}
+
+			.detail-item span {
+				font-weight: 600;
+				color: var(--text);
+			}
+			
+			/* Estilos para el texto de no hay viajes */
+			.no-rides-message {
+				padding: 20px;
+				background-color: #fffbe6;
+				border: 1px solid #ffe58f;
+				color: #d35400;
+				border-radius: 8px;
+				text-align: center;
+				font-weight: 500;
+			}
+
+			/* Media Queries para Responsividad */
+			@media (max-width: 900px) {
+				.main-layout {
+					flex-direction: column; /* Apilar en pantallas pequeñas */
+					gap: 25px;
+					max-width: 600px;
+				}
+				
+				.search-sidebar {
+					flex-basis: auto; /* Ancho completo */
+					width: 100%;
+				}
+				
+				.results-area {
+					width: 100%;
+				}
+			}
+			
+			@media (max-width: 500px) {
+				body {
+					padding: 20px 10px;
+				}
+				.search-sidebar, .ride-card {
+					padding: 20px;
+				}
+				.ride-route {
+					font-size: 18px;
+				}
+			}
+		</style>
 	</h:head>
 	<h:body>
-		<h1>QueryRides</h1>
-		<h:form>
-			<table>
-				<tr>
-					<td>Depart city:</td>
-					<td><h:inputText id="departCity"
-							value="#{queryRideBean.departCity}"></h:inputText></td>
-				</tr>
-				<tr>
-					<td>Arrival city:</td>
-					<td><h:inputText id="arrivalCity"
-							value="#{queryRideBean.arrivalCity}"></h:inputText></td>
-				</tr>
-				<tr>
-					<!-- <td>Data (yyyy/MM/dd):</td>
-<td><h:inputText id="data" value="#{login.data}">
-<f:convertDateTime pattern="yyyy/MM/dd"/>
-</h:inputText></td>
-<td> <h:message for="data" style="color:red" /> </td>
--->
-					<td>Ride date</td>
-					<td><p:calendar id="data" value="#{queryRideBean.date}"
-							navigator="false" mode="inline">
-						</p:calendar></td>
-				</tr>
-			</table>
-			<h:messages style="color:red" />
-			<h:commandButton value="Query Ride"
-				action="#{queryRideBean.queryRides}" />
-			<h:commandButton value="Back" action="Menu" />
+		<div class="main-layout">
+			
+			<div class="search-sidebar">
+				<h1><h:outputText value="Buscar Viajes" /></h1>
+				
+				<h:form styleClass="form-container">
+					<h:messages globalOnly="true" showDetail="true" showSummary="false" 
+						styleClass="global-messages" errorClass="error" infoClass="info" 
+						warnClass="warn" fatalClass="error" />
+						
+					<table class="form-table">
+						<tr>
+							<td>Ciudad de salida:</td>
+							<td><h:inputText id="departCity"
+								value="#{queryRideBean.departCity}" styleClass="inputText" required="true"
+								requiredMessage="La ciudad de salida es obligatoria."></h:inputText>
+								<h:message for="departCity" style="color:var(--error); font-size:12px;" /></td>
+						</tr>
+						<tr>
+							<td>Ciudad de llegada:</td>
+							<td><h:inputText id="arrivalCity"
+								value="#{queryRideBean.arrivalCity}" styleClass="inputText" required="true"
+								requiredMessage="La ciudad de llegada es obligatoria."></h:inputText>
+								<h:message for="arrivalCity" style="color:var(--error); font-size:12px;" /></td>
+						</tr>
+						<tr>
+							<td>Fecha del viaje:</td>
+							<td><p:calendar id="data" value="#{queryRideBean.date}"
+								navigator="false" mode="popup" styleClass="calendar-input" required="true"
+								requiredMessage="La fecha es obligatoria." placeholder="Selecciona la fecha">
+								</p:calendar>
+								<h:message for="data" style="color:var(--error); font-size:12px;" /></td>
+						</tr>
+					</table>
+					
+					<div class="button-container">
+						<h:commandButton value="Buscar"
+							action="#{queryRideBean.queryRides}" styleClass="commandButton" />
+						</div>
+				</h:form>
+			</div>
+			
+			<div class="results-area">
+				<h1><h:outputText value="Resultados de la Búsqueda" /></h1>
+				
+				<h:panelGroup layout="block" styleClass="no-rides-message"
+					rendered="#{empty queryRideBean.rides and facesContext.postback}">
+					<h:outputText value="¡Vaya! No se encontraron viajes con esos criterios." />
+				</h:panelGroup>
 
-		</h:form>
-
-		<h:dataTable value="#{queryRideBean.rides}" var="ride" border="1"
-			rendered="#{not empty queryRideBean.rides}">
-
-			<h:column>
-				<f:facet name="header">From</f:facet>
-        #{ride.from}
-    </h:column>
-
-			<h:column>
-				<f:facet name="header">To</f:facet>
-        #{ride.to}
-    </h:column>
-
-			<h:column>
-				<f:facet name="header">Date</f:facet>
-				<h:outputText value="#{ride.date}">
-					<f:convertDateTime pattern="yyyy/MM/dd" />
-				</h:outputText>
-			</h:column>
-
-		</h:dataTable>
-
-
+				<h:panelGroup layout="block" styleClass="rides-list"
+					rendered="#{not empty queryRideBean.rides}">
+					
+					<ui:repeat value="#{queryRideBean.rides}" var="ride">
+						<div class="ride-card">
+							<div class="ride-header">
+								<div class="ride-route">
+									<span class="city">#{ride.departing}</span>
+									<span class="arrow">→</span>
+									<span class="city">#{ride.arrival}</span>
+								</div>
+								<div class="ride-date">
+									<h:outputText value="#{ride.date}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</div>
+							</div>
+							
+							<div class="ride-details">
+								<div class="detail-item">Hora de salida: <span>
+									<h:outputText value="#{ride.date}">
+										<f:convertDateTime pattern="HH:mm" />
+									</h:outputText>
+								</span></div>
+								<div class="detail-item">Asientos: <span>#{ride.nPlaces}</span></div>
+								<div class="detail-item">Precio: <span>#{ride.price} €</span></div>
+							</div>
+							
+							
+						</div>
+					</ui:repeat>
+					
+				</h:panelGroup>
+			</div>
+			
+		</div>
 	</h:body>
 </f:view>
 </html>

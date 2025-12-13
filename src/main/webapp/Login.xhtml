@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml/DTD/xhtml-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<f:view>
+	<h:head>
+		<title>Login</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<h:outputStylesheet>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&amp;display=swap');
+        </h:outputStylesheet>
+
+		<style>
+/* --- PALETA DE COLORES --- */
+:root {
+--bg: #f9f9f9; 
+--panel: #ffffff; 
+--text: #333333; 
+--muted: #666666; 
+--outline: #e0e0e0; 
+--outline-focus: #1a73e8; 
+--btn-text: #ffffff; 
+--btn-bg: #1a73e8; 
+--btn-outline: #1a73e8; 
+--btn-hover-bg: #155cb0; 
+--error: #e74c3c; /* Definición de color de error */
+}
+
+/* --- ESTILOS GENERALES --- */
+* {
+box-sizing: border-box;
+}
+
+html, body {
+height: 100%;
+margin: 0;
+font-family: 'Poppins', sans-serif;
+background: var(--bg);
+color: var(--text);
+}
+
+.page {
+min-height: 100vh;
+display: grid;
+place-items: center;
+padding: 24px;
+}
+
+.card {
+width: 100%;
+max-width: 380px;
+background: var(--panel);
+border: 1px solid var(--outline);
+border-radius: 12px;
+padding: 30px;
+box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.card h1 {
+font-size: 20px;
+letter-spacing: normal;
+text-align: center;
+font-weight: 700;
+margin: 0 0 24px 0;
+color: var(--text);
+}
+
+.field {
+display: flex;
+flex-direction: column;
+gap: 6px;
+margin-bottom: 20px;
+}
+
+.label {
+font-size: 13px;
+font-weight: 500;
+color: var(--muted);
+}
+
+.input {
+appearance: none;
+width: 100%;
+background: #f7f7f7;
+border: 1px solid var(--outline);
+border-radius: 8px;
+padding: 14px 16px;
+color: var(--text);
+font-size: 15px;
+outline: none;
+transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.input::placeholder {
+color: #999999;
+}
+
+.input:focus {
+background: var(--panel);
+border-color: var(--outline-focus);
+box-shadow: 0 0 0 1px var(--outline-focus);
+}
+
+.btn {
+width: 100%;
+background: var(--btn-bg);
+color: var(--btn-text);
+border: none;
+border-radius: 8px;
+padding: 12px 16px;
+font-weight: 600;
+font-size: 16px;
+cursor: pointer;
+transition: background-color .2s ease, transform .04s ease;
+margin-top: 8px;
+}
+
+.btn:hover {
+background: var(--btn-hover-bg);
+}
+
+.btn:active {
+transform: translateY(1px);
+}
+
+.footer {
+margin-top: 24px;
+text-align: center;
+color: var(--muted);
+font-size: 13px;
+}
+
+.footer a {
+color: var(--btn-bg); 
+text-decoration: none;
+font-weight: 600;
+transition: color .15s ease;
+}
+
+.footer a:hover {
+color: var(--btn-hover-bg);
+}
+
+.footer a, .footer .footer-link {
+color: var(--btn-bg); 
+text-decoration: none;
+font-weight: 600;
+transition: color .15s ease;
+}
+
+.footer a:hover, .footer .footer-link:hover {
+color: var(--btn-hover-bg);
+}
+
+/* Mensaje de campo individual (Validation Message) */
+.msg {
+	color: var(--error); 
+	font-size: 12px;
+	margin-top: 2px;
+}
+
+/* --- MENSAJES GLOBALES CORREGIDOS (MUESTRA MENSAJES EN CAJA SIN PUNTO) --- */
+.messages {
+    list-style: none; /* Elimina la viñeta/punto */
+    padding: 0;
+    margin: 6px 0 16px;
+    text-align: center;
+}
+
+.messages li {
+    list-style: none;
+    padding: 12px 18px;
+    margin: 8px 0;
+    border-radius: 8px; /* Borde redondeado */
+    font-weight: 500;
+    font-size: 14px;
+    border: 1px solid;
+    text-align: left;
+    display: block; 
+}
+
+/* Estilo para mensajes de Error */
+.messages li { /* Aseguramos que la regla de error aplica al li */
+    color: var(--error); 
+    background-color: #fcebeb; 
+    border-color: #f5c2c7; 
+}
+
+/* Si tu servidor de JSF/PrimeFaces envuelve los mensajes globales en otro div, 
+   podrías necesitar aplicar las clases a los hijos de .messages, pero este enfoque 
+   debería funcionar con <h:messages globalOnly="true" /> */
+</style>
+	</h:head>
+
+	<h:body>
+		<div class="page">
+			
+			<div class="card" role="region" aria-label="Login Panel">
+				<h1>LOGIN</h1>
+				
+				<h:form prependId="false">
+					<h:messages styleClass="messages" globalOnly="true" />
+
+					<div class="field">
+						<label class="label" for="email">Email</label>
+						<h:inputText id="email" 
+							value="#{authBean.email}" 
+							styleClass="input" required="true"
+							requiredMessage="El email es requerido." pt:placeholder="ejemplo@dominio.com"
+							pt:autofocus="true" />
+						<h:message for="email" styleClass="msg" />
+					</div>
+
+					<div class="field">
+						<label class="label" for="password">Contraseña</label>
+						<h:inputSecret id="password"
+							value="#{authBean.password}" 
+							styleClass="input" required="true"
+							requiredMessage="La contraseña es requerida."
+							pt:placeholder="Ingresa tu contraseña" />
+						<h:message for="password" styleClass="msg" />
+					</div>
+					
+					<h:commandButton value="Iniciar Sesión" 
+						action="#{authBean.login}"
+						styleClass="btn" />
+				</h:form>
+				
+				<div class="footer">
+					¿No tienes una cuenta?
+					<h:link value="Regístrate" outcome="Register"
+    					styleClass="footer-link" />
+				</div>
+			</div>
+			
+		</div>
+	</h:body>
+	
+</f:view>
+</html>

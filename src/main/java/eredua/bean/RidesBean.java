@@ -14,7 +14,7 @@ import jakarta.inject.Named;
 @ApplicationScoped
 public class RidesBean {
 	
-	private Driver driver = new Driver("driver3@gmail.com", "pass", "Test driver", "test");
+	private Driver driver = new Driver("driver3@gmail.com", "pass", "Lionel", "Messi");
 	
     public Driver getDriver() {
 		return driver;

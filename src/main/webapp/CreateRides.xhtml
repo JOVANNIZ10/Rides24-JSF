@@ -1,55 +1,332 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
- "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 <f:view>
 	<h:head>
-		<title>Create</title>
+		<title>Publicar Viaje - Rides24</title>
+		<h:outputStylesheet>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&amp;display=swap');
+        </h:outputStylesheet>
+
+		<style type="text/css">
+			/* PALETA DE COLORES - AZUL Y BLANCO MODERNO */
+			:root {
+				--bg: #f5f7fa; 
+				--panel: #ffffff; 
+				--text: #333333; 
+				--muted: #666666; 
+				--outline: #e0e0e0; 
+				--outline-focus: #1a73e8; 
+				--btn-text: #ffffff; 
+				--btn-bg: #1a73e8; 
+				--btn-hover-bg: #155cb0; 
+				--error: #e74c3c; 
+			}
+
+			/* Estilos Generales */
+			* {
+				box-sizing: border-box;
+				font-family: 'Poppins', sans-serif;
+			}
+			
+			body {
+				background-color: var(--bg);
+				color: var(--text);
+				margin: 0;
+				padding: 40px 0;
+				display: flex;
+				justify-content: center;
+				align-items: flex-start;
+				min-height: 100vh;
+			}
+			
+			.container {
+				text-align: left;
+				background-color: var(--panel);
+				border-radius: 12px;
+				box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+				padding: 30px;
+				width: 90%;
+				max-width: 550px; 
+			}
+			
+			h1 {
+				color: var(--text);
+				font-size: 24px;
+				margin-bottom: 24px;
+				font-weight: 700;
+				text-align: center;
+			}
+			
+			/* Formulario y Inputs */
+			.form-table {
+				width: 100%;
+				border-collapse: separate; 
+				border-spacing: 0 10px; 
+				margin-bottom: 10px;
+			}
+			
+			.form-table td {
+				padding: 0;
+				padding-top: 5px; 
+				vertical-align: top;
+			}
+			
+			.form-table td:first-child {
+				font-weight: 500;
+				color: var(--muted);
+				width: 35%; 
+				min-width: 150px;
+				padding-top: 15px;
+			}
+			
+			.input-wrapper {
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+			}
+			
+			.inputText, 
+			.ui-calendar .ui-inputfield { 
+				width: 100% !important; 
+				padding: 10px 14px;
+				border: 1px solid var(--outline);
+				border-radius: 8px;
+				font-size: 15px;
+				color: var(--text);
+				background: #f7f7f7;
+				transition: border-color 0.2s ease, box-shadow 0.2s ease;
+				box-sizing: border-box;
+			}
+			
+			.inputText:focus, .ui-calendar .ui-inputfield:focus {
+				outline: none;
+				border-color: var(--outline-focus);
+				box-shadow: 0 0 0 1px var(--outline-focus);
+			}
+
+			/* ARREGLO VISUAL DEL CALENDARIO Y BOTÓN DE PRIMEFACES */
+			.ui-calendar {
+				width: 100% !important;
+				position: relative; 
+				display: inline-block;
+			}
+			
+			.ui-calendar .ui-inputfield { 
+			    padding-right: 32px !important; 
+			}
+			
+			.ui-calendar .ui-datepicker-trigger {
+			    position: absolute;
+			    right: 0;
+			    top: 0;
+			    height: 100%;
+			    width: 32px; 
+			    border: none;
+			    background: transparent; 
+			    color: var(--muted); 
+			    padding: 0;
+			    cursor: pointer;
+			    line-height: 1; 
+			    display: flex; 
+			    align-items: center;
+			    justify-content: center;
+			    border-radius: 0 8px 8px 0; 
+			}
+
+			.ui-datepicker {
+				border: 1px solid var(--outline) !important;
+				border-radius: 8px !important;
+				box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1) !important;
+				font-size: 14px;
+			}
+			
+			/* Botones */
+			.button-container {
+				display: flex;
+				gap: 15px;
+				margin-top: 30px;
+				justify-content: center;
+			}
+			
+			.commandButton {
+				padding: 12px 24px;
+				font-size: 16px;
+				font-weight: 600;
+				border: none;
+				border-radius: 8px;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				color: var(--btn-text);
+				min-width: 140px;
+				width: 100%; 
+			    max-width: 300px;
+			}
+			
+			.commandButton:hover {
+				transform: translateY(-1px);
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			}
+
+			.commandButton[value="Publicar Viaje"] {
+				background: var(--btn-bg); /* Azul principal */
+			}
+			
+			/* Mensajes de Validación Individuales */
+			.validation-msg {
+				color: var(--error);
+				font-size: 12px;
+				margin-top: 2px;
+				display: block;
+			}
+
+			/* --- MENSAJES GLOBALES CORREGIDOS (SIN PUNTO) --- */
+			.global-messages {
+				margin: 15px 0;
+				padding: 0;
+				text-align: center;
+			}
+			
+			.global-messages li {
+				list-style: none; /* ELIMINA LA VIÑETA (punto) */
+				padding: 12px 20px;
+				margin: 8px 0;
+				border-radius: 8px; /* Borde redondeado */
+				font-weight: 500;
+				border: 1px solid; /* Borde de caja */
+				text-align: left;
+			}
+			
+			.global-messages .error {
+				color: var(--error);
+				background-color: #fcebeb; 
+				border-color: #f5c2c7; 
+			}
+			
+			.global-messages .info {
+				color: var(--btn-bg);
+				background-color: #e6f7ff;
+				border-color: #91d5ff;
+			}
+			
+			@media (max-width: 768px) {
+				.container {
+					padding: 25px 20px;
+				}
+				
+				.form-table td {
+					display: block;
+					width: 100%;
+					padding: 10px 0;
+				}
+				
+				.form-table td:first-child {
+					width: 100%;
+					padding-bottom: 5px;
+					padding-top: 10px;
+				}
+				
+				.button-container {
+					flex-direction: column;
+					align-items: center;
+				}
+				
+				.commandButton {
+					width: 100%;
+					max-width: 300px;
+				}
+			}
+		</style>
 	</h:head>
 	<h:body>
-		<h1>CreateRides</h1>
-		<h:form>
-			<table>
-				<tr>
-					<td>Depart city:</td>
-					<td><h:inputText id="departCity"
-							value="#{createRide.from}"></h:inputText></td>
-				</tr>
-				<tr>
-					<td>Arrival city:</td>
-					<td><h:inputText id="arrivalCity"
-							value="#{createRide.to}"></h:inputText></td>
-				</tr>
-				<tr>
-					<td>Number of seats:</td>
-					<td><h:inputText id="nSeats"
-							value="#{createRide.seats}"></h:inputText></td>
-				</tr>
-				<tr>
-					<td>Price:</td>
-					<td><h:inputText id="price" value="#{createRide.price}"></h:inputText></td>
-				</tr>
-				<tr>
-					<!-- <td>Data (yyyy/MM/dd):</td>
-<td><h:inputText id="data" value="#{login.data}">
-<f:convertDateTime pattern="yyyy/MM/dd"/>
-</h:inputText></td>
-<td> <h:message for="data" style="color:red" /> </td>
--->
-					<td>Ride date</td> 
-					<td><p:calendar id="data" value="#{createRide.data}"
-							navigator="false" mode="inline">
-						</p:calendar></td>
-				</tr>
-			</table>
-			<br />
-			<h:messages globalOnly="true" showDetail="true" showSummary="true" style="color:red;" />
-			<h:commandButton value="Create Ride" action="#{createRide.createRideAction}" />
-			<h:commandButton value="Back" action="Menu" />
-		</h:form>
+		<div class="container">
+			<h1><h:outputText value="Publicar Nuevo Viaje" /></h1>
+			<h:form styleClass="form-container">
+				
+				<h:messages globalOnly="true" showDetail="true" showSummary="false" 
+					styleClass="global-messages" errorClass="error" infoClass="info" 
+					warnClass="warn" fatalClass="error" />
+				
+				<table class="form-table">
+					
+					<tr>
+						<td>Ciudad de salida:</td>
+						<td><h:panelGroup styleClass="input-wrapper">
+							<h:inputText id="departCity"
+								value="#{createRide.from}" styleClass="inputText" required="true"
+								requiredMessage="La ciudad de salida es obligatoria."
+								pt:placeholder="Ej: Barcelona"></h:inputText>
+							<h:message for="departCity" styleClass="validation-msg" />
+						</h:panelGroup></td>
+					</tr>
+					
+					<tr>
+						<td>Ciudad de llegada:</td>
+						<td><h:panelGroup styleClass="input-wrapper">
+							<h:inputText id="arrivalCity"
+								value="#{createRide.to}" styleClass="inputText" required="true"
+								requiredMessage="La ciudad de llegada es obligatoria."
+								pt:placeholder="Ej: Madrid"></h:inputText>
+							<h:message for="arrivalCity" styleClass="validation-msg" />
+						</h:panelGroup></td>
+					</tr>
+					
+					<tr>
+						<td>Número de asientos:</td>
+						<td><h:panelGroup styleClass="input-wrapper">
+							<h:inputText id="nSeats"
+								value="#{createRide.seats}" styleClass="inputText" required="true"
+								requiredMessage="El número de asientos es obligatorio."
+								pt:placeholder="Ej: 3">
+								<f:validateLongRange minimum="1" maximum="8" />
+							</h:inputText>
+							<h:message for="nSeats" styleClass="validation-msg" />
+						</h:panelGroup></td>
+					</tr>
+					
+					<tr>
+						<td>Precio por asiento (€):</td>
+						<td><h:panelGroup styleClass="input-wrapper">
+							<h:inputText id="price" 
+								value="#{createRide.price}" styleClass="inputText" required="true"
+								requiredMessage="El precio es obligatorio."
+								pt:placeholder="Ej: 15.00">
+								<f:validateDoubleRange minimum="0.01" />
+							</h:inputText>
+							<h:message for="price" styleClass="validation-msg" />
+						</h:panelGroup></td>
+					</tr>
+					
+					<tr>
+						<td>Fecha y Hora:</td>
+						<td><h:panelGroup styleClass="input-wrapper">
+							<p:calendar id="dataTime" value="#{createRide.data}"
+								navigator="true" 
+								pattern="dd/MM/yyyy HH:mm" 
+								required="true"
+								requiredMessage="La fecha y hora son obligatorias."
+								placeholder="Día y hora de salida"
+								timeZone="CET"
+								showTime="true" timeHourFormat="24"
+								showOn="button">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</p:calendar>
+							<h:message for="dataTime" styleClass="validation-msg" />
+						</h:panelGroup></td>
+					</tr>
+				</table>
+				
+				<div class="button-container">
+					<h:commandButton value="Publicar Viaje" 
+						action="#{createRide.createRideAction}" styleClass="commandButton" />
+				</div>
+			</h:form>
+		</div>
 	</h:body>
 </f:view>
 </html>

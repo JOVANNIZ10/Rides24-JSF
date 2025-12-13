@@ -6,6 +6,42 @@ https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_3_0.xsd"
 	version="3.0">
 
 	<navigation-rule>
+		<display-name>LandingPageUR.xhtml</display-name>
+		<from-view-id>/LandingPageUR.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>login</from-outcome>
+			<to-view-id>/Login.xhtml</to-view-id>
+			<redirect/> </navigation-case>
+		<navigation-case>
+			<from-outcome>register</from-outcome>
+			<to-view-id>/Register.xhtml</to-view-id>
+			<redirect/> </navigation-case>
+	</navigation-rule> 
+	
+	<navigation-rule>
+		<from-view-id>/Login.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>register</from-outcome>
+			<to-view-id>/Register.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>menu</from-outcome>
+			<to-view-id>/Menu.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Register.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>Login</from-outcome>
+			<to-view-id>/Login.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
 		<display-name>Menu.xhtml</display-name>
 		<from-view-id>/Menu.xhtml</from-view-id>
 		<navigation-case>
@@ -17,6 +53,7 @@ https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_3_0.xsd"
 			<to-view-id>/QueryRides.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+	
 	<navigation-rule>
 		<display-name>CreateRide.xhtml</display-name>
 		<from-view-id>/CreateRide.xhtml</from-view-id>
@@ -25,6 +62,7 @@ https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_3_0.xsd"
 			<to-view-id>/Menu.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+
 	<navigation-rule>
 		<display-name>QueryRides.xhtml</display-name>
 		<from-view-id>/QueryRides.xhtml</from-view-id>

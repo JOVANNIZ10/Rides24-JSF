@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+    <h:head>
+        <title>Gidari Guztiak</title>
+    </h:head>
+    <h:body>
+        <h1>Gidari Guztiak</h1>
+
+        <h:form>
+            <!-- Etiqueta -->
+            <h:outputLabel for="gidariSelect" value="Aukeratu gidaria:" />
+
+            <!-- Menú desplegable dinámico -->
+            <h:selectOneMenu id="gidariSelect" value="#{gidariBean.email}">
+                <f:selectItem itemValue="" itemLabel="-- Aukeratu --" noSelectionOption="true" />
+                <f:selectItems value="#{gidariBean.drivers}"
+                               var="d"
+                               itemValue="#{d.email}"
+                               itemLabel="#{d.email}" />
+            </h:selectOneMenu>
+
+            <!-- Botón para enviar -->
+            <h:commandButton value="BIDAI GUZTIAK ERAKUTSI"
+						action="#{gidariBean.erakutsiBidaiak}"/>
+        </h:form>
+	<h:dataTable value="#{gidariBean.rides}" var="ride" border="0"
+				styleClass="data-table" rowClasses="row-even,row-odd"
+				rendered="#{not empty gidariBean.rides}">
+
+				<h:column>
+					<f:facet name="header">From</f:facet>
+					#{ride.from}
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">To</f:facet>
+					#{ride.to}
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Date</f:facet>
+					<h:outputText value="#{ride.date}">
+						<f:convertDateTime pattern="yyyy/MM/dd" />
+					</h:outputText>
+				</h:column>
+
+			</h:dataTable>
+    </h:body>
+</f:view>
+</html>
+

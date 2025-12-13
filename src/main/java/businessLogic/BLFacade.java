@@ -4,9 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import domain.Ride;
-
+import domain.User;
 import domain.Driver;
 import exceptions.RideMustBeLaterThanTodayException;
+import exceptions.ErabiltzaileaDagoenekoErregistratutaException;
 import exceptions.RideAlreadyExistException;
 
  
@@ -77,4 +78,10 @@ public interface BLFacade  {
 	//public User login(String email, String password);
 	
 	public Driver getDriver(String email);
+	
+	public List<Driver> getDrivers();
+	
+	public List<Ride> getRidesByDriverEmail(String email);
+	public User register(String email, String name, String surname, String password, boolean isDriver) throws ErabiltzaileaDagoenekoErregistratutaException;
+	public User login(String email, String password) ;
 }

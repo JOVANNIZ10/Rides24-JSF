@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<f:view>
+	<h:head>
+		<title>GoWay</title>
+		<h:outputStylesheet>
+			@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&amp;display=swap');
+		</h:outputStylesheet>
+		<style type="text/css">
+
+/* Header container */
+body {
+	background-color: #000000;
+	font-family: 'Poppins', sans-serif;
+}
+
+.bg-video {
+	position: fixed;
+	inset: 0;
+	width: 100vw;
+	height: 100vh;
+	object-fit: cover;
+	z-index: -1;
+	background: #000; /* fallback mientras carga */
+	pointer-events: none; /* no bloquea clics */
+}
+
+.bg-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 0; /* debajo del header (que tendrá z-index mayor) */
+	pointer-events: none; /* no bloquea clics */
+	/* Elige uno de estos fondos: */
+	/* A) color liso con transparencia */
+	background: rgba(0, 0, 0, 0.35);
+
+	/* B) gradiente sutil (comenta A si usas B)
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.25),
+    rgba(0,0,0,0.45)
+  );
+  */
+}
+
+.app-header {
+	position: relative;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: space-between; /* muturretan */
+	padding: 4px 16px;
+	background: transparent;
+}
+/* Ezkerreko blokeua (logo + izen aplikazioa) */
+.header-left {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.app-title {
+	font-size: 1.25rem; /* h1 txiki moduan */
+	font-weight: 600;
+	margin: 0;
+}
+/* Eskuineko blokeua (ikonoa, izena, menu) */
+.header-right {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.hero {
+	position: fixed; /* pantaila osoan kokatzeko */
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 8;
+	/* header ezker/eskuinaren azpitik, baina bideoaren gainetik */
+	text-align: center;
+	color: #ffffff;
+	padding: 0 24px; /* ertzetan arnasa */
+	max-width: 900px; /* zabalera maximoa */
+}
+
+.hero-title {
+	font-size: clamp(2rem, 6vw, 4rem); /* erantzutzailea */
+	font-weight: 800;
+	letter-spacing: 0.5px;
+	margin: 0 0 8px 0;
+	line-height: 1.1;
+}
+
+.hero-subtitle {
+	font-size: clamp(1rem, 2.6vw, 1.5rem);
+	font-weight: 400;
+	margin: 0 0 24px 0;
+	line-height: 1.4;
+	opacity: 0.95;
+}
+
+/* Botoia */
+.hero-btn {
+	display: inline-block;
+	padding: 12px 20px;
+	border-radius: 8px;
+	font-weight: 600;
+	color: #ffffff; /* testu iluna */ /* botoi zuri distiratsua */
+	border: 1px solid rgba(255, 255, 255, 0.7);
+	text-decoration: none;
+	transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+	transform: scale(1.04);
+	background: #ffffff;
+	color: #000000;
+}
+
+.icon {
+	transition: transform 0.3s ease;
+}
+
+.icon:hover {
+	transform: scale(1.04);
+	transition: all 0.3s ease;
+}
+/* Contenedor del perfil */
+.profile-wrapper {
+	position: relative;
+	cursor: pointer;
+}
+
+/* Menú desplegable */
+.profile-menu {
+	position: absolute;
+	top: 65px; /* un poco más cerca del icono */
+	right: 0;
+	min-width: 220px;
+	background: rgba(0, 0, 0, 0.9);
+	/* 🔥 SIN borde arriba */
+	/* sombra solo hacia abajo */
+	box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
+	backdrop-filter: blur(6px);
+	/* Animación */
+	opacity: 0;
+	transform: translateY(-8px);
+	transition: opacity 0.25s ease, transform 0.25s ease;
+	pointer-events: none;
+	z-index: 20;
+}
+
+.profile-menu.show {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
+/* Items */
+.profile-item {
+	display: block;
+	padding: 14px 20px; /* ⬅ MÁS ALTO */
+	font-size: 1rem; /* ⬅ TEXTO MÁS GRANDE */
+	font-weight: 500;
+	color: #ffffff;
+	text-decoration: none;
+	transition: background 0.25s ease;
+	cursor: pointer;
+}
+
+.profile-item:hover {
+	background: rgba(255, 255, 255, 0.15);
+}
+</style>
+	</h:head>
+	<h:body>
+		<video class="bg-video" autoplay="autoplay" loop="loop" muted="muted"
+			playsinline="playsinline" preload="metadata"> <source
+			src="#{resource['video/video2.mp4']}" type="video/mp4" /> Tu
+		navegador no soporta el video. </video>
+
+		<div class="bg-overlay"></div>
+		<div class="app-header">
+			<!-- Ezkerra: logo + titulua -->
+			<div class="header-left">
+				<!-- meter outcome en los link-->
+				<h:link class="icon">
+					<h:graphicImage library="img" name="logoImg.png" alt="GoWay logo"
+						width="70" height="70" styleClass="icon" />
+				</h:link>
+				<!-- <h:outputText styleClass="app-title" value="GoWay" /> -->
+
+			</div>
+
+			<!-- Eskuina: erabiltzaile ikonoa + (aukeraz, izena) -->
+			<div class="header-right">
+				<div class="profile-wrapper">
+					<a href="javascript:void(0)" onclick="toggleProfileMenu(event)"
+						class="icon"> <h:graphicImage library="img"
+							name="profileImage.png" alt="Perfil" width="60" height="60"
+							styleClass="icon" />
+					</a>
+
+					<div id="profile-menu" class="profile-menu">
+						<h:link outcome="CreateRides" styleClass="profile-item">
+				Crear Viaje
+			</h:link>
+						<h:form id="logoutForm">
+
+							<h:commandLink action="#{authBean.logout}"
+								styleClass="profile-item" value="Cerrar Sesión" />
+
+						</h:form>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<section class="hero" aria-label="GoWay mezua">
+		<h1 class="hero-title">GoWay</h1>
+		<p class="hero-subtitle">Viajar y vivir nuevas experiencias nunca
+			ha sido tan fácil</p>
+
+		<!-- Botoia: JSF link edo command --> <h:link
+			outcome="QueryRides.xhtml" styleClass="hero-btn">
+		      Buscar Viajes
+		    </h:link> <!-- Alternatiba: submit/logika behar baduzu
+		    <h:form>
+		      #{appBean.irAExplorar}
+		    </h:form>
+		    --> </section>
+
+		<script type="text/javascript">
+		
+	function toggleProfileMenu(event) {
+		event.stopPropagation(); // 🔥 EVITA QUE SE CIERRE AL INSTANTE
+		const menu = document.getElementById("profile-menu");
+		menu.classList.toggle("show");
+	}
+
+	// Cerrar al hacer click fuera
+	document.addEventListener("click", function () {
+		const menu = document.getElementById("profile-menu");
+		menu.classList.remove("show");
+	});
+</script>
+	</h:body>
+
+
+
+</f:view>
+</html>
