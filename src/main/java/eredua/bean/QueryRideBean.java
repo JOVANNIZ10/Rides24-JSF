@@ -24,7 +24,6 @@ public class QueryRideBean implements Serializable{
 	private List<Ride> rides;
 
 	public void queryRides() {
-	    // Validación de campos obligatorios
 	    if (departCity == null || departCity.trim().isEmpty() ||
 	        arrivalCity == null || arrivalCity.trim().isEmpty() ||
 	        date == null) {
@@ -32,10 +31,9 @@ public class QueryRideBean implements Serializable{
 	        FacesContext.getCurrentInstance().addMessage(null,
 	            new FacesMessage(FacesMessage.SEVERITY_ERROR,
 	            "Todos los campos son obligatorios", null));
-	        return; // simplemente termina el método
+	        return; 
 	    }
 
-	    // Llamada a la lógica de negocio
 	    BLFacade facadeBL = FacadeBean.getBusinessLogic();
 	    rides = facadeBL.getRides(departCity, arrivalCity, date);
 

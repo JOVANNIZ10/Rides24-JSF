@@ -9,6 +9,7 @@
 <f:view>
 	<h:head>
 		<title>Publicar Viaje - Rides24</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<h:outputStylesheet>
             @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&amp;display=swap');
         </h:outputStylesheet>
@@ -36,13 +37,14 @@
 			
 			body {
 				background-color: var(--bg);
-				color: var(--text);
-				margin: 0;
-				padding: 40px 0;
-				display: flex;
-				justify-content: center;
-				align-items: flex-start;
-				min-height: 100vh;
+		    color: var(--text);
+		    margin: 0;
+		    padding: 0; /* QUITAMOS EL PADDING SUPERIOR, lo gestionará el header */
+		    display: flex;
+		    flex-direction: column; /* Hacemos que los hijos (header y container) se apilen verticalmente */
+		    align-items: center; /* Centramos los hijos horizontalmente */
+		    min-height: 100vh;
+		    width: 100%;
 			}
 			
 			.container {
@@ -52,7 +54,7 @@
 				box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 				padding: 30px;
 				width: 90%;
-				max-width: 550px; 
+				max-width: 550px;
 			}
 			
 			h1 {
@@ -241,9 +243,124 @@
 					max-width: 300px;
 				}
 			}
+.icon {
+	transition: transform 0.3s ease;
+	filter: drop-shadow(0 0 0.1rem black);
+
+}
+
+.icon:hover {
+	transform: scale(1.04);
+	transition: all 0.3s ease;
+	
+}
+/* Contenedor del perfil */
+.profile-wrapper {
+	position: relative;
+	cursor: pointer;
+}
+
+/* Menú desplegable */
+.profile-menu {
+	position: absolute;
+	top: 65px; /* un poco más cerca del icono */
+	right: 0;
+	min-width: 220px;
+	background: rgba(0, 0, 0, 0);
+	/* 🔥 SIN borde arriba */
+	/* sombra solo hacia abajo */
+	box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(6px);
+	/* Animación */
+	opacity: 0;
+	transform: translateY(-8px);
+	transition: opacity 0.25s ease, transform 0.25s ease;
+	pointer-events: none;
+	z-index: 20;
+}
+
+.profile-menu.show {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
+/* Items */
+.profile-item {
+	display: block;
+	padding: 14px 20px; /* ⬅ MÁS ALTO */
+	font-size: 1rem; /* ⬅ TEXTO MÁS GRANDE */
+	font-weight: 500;
+	color: #000000;
+	text-decoration: none;
+	transition: background 0.25s ease;
+	cursor: pointer;
+}
+
+.profile-item:hover {
+	background: rgba(10, 10, 10, 0.1);
+}
+
+.app-header {
+	position: relative;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: space-between; /* muturretan */
+	padding: 4px 16px;
+	background: transparent;
+	width:100%;
+}
+	10
+/*zkerreko blokeua (logo + izen aplikazioa) */
+.header-left {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+/* Eskuineko blokeua (ikonoa, izena, menu) */
+.header-right {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
 		</style>
 	</h:head>
 	<h:body>
+		<div class="app-header">
+			<!-- Ezkerra: logo + titulua -->
+			<div class="header-left">
+				<!-- meter outcome en los link-->
+				<h:link class="icon" outcome="LandingPageDR">
+					<h:graphicImage library="img" name="logoImg.png" alt="GoWay logo"
+						width="70" height="70" styleClass="icon" />
+				</h:link>
+				<!-- <h:outputText styleClass="app-title" value="GoWay" /> -->
+
+			</div>
+
+			<!-- Eskuina: erabiltzaile ikonoa + (aukeraz, izena) -->
+			<div class="header-right">
+				<div class="profile-wrapper">
+					<a href="javascript:void(0)" onclick="toggleProfileMenu(event)"
+						class="icon" > <h:graphicImage library="img"
+							name="profileImage.png" alt="Perfil" width="60" height="60"
+							styleClass="icon" />
+					</a>
+
+					<div id="profile-menu" class="profile-menu">
+						<h:form id="logoutForm">
+
+							<h:commandLink action="#{authBean.logout}"
+								styleClass="profile-item" value="Cerrar Sesión" />
+
+						</h:form>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
 		<div class="container">
 			<h1><h:outputText value="Publicar Nuevo Viaje" /></h1>
 			<h:form styleClass="form-container">
@@ -327,6 +444,20 @@
 				</div>
 			</h:form>
 		</div>
+		<script type="text/javascript">
+		
+	function toggleProfileMenu(event) {
+		event.stopPropagation(); // 🔥 EVITA QUE SE CIERRE AL INSTANTE
+		const menu = document.getElementById("profile-menu");
+		menu.classList.toggle("show");
+	}
+
+	// Cerrar al hacer click fuera
+	document.addEventListener("click", function () {
+		const menu = document.getElementById("profile-menu");
+		menu.classList.remove("show");
+	});
+</script>
 	</h:body>
 </f:view>
 </html>

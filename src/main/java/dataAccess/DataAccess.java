@@ -48,13 +48,10 @@ public class DataAccess {
 	public List<Ride> getRides(String departing, String arrival, Date rideDate) {
 	    if (departing == null || arrival == null || rideDate == null)
 	        return new ArrayList<Ride>();
-	    
-	    // ***************************************************************
-	    // 1. CALCULAR EL RANGO DE FECHAS (00:00:00 a 23:59:59 del día)
-	    // ***************************************************************
+	   
 	    Calendar calendar = Calendar.getInstance();
 	    
-	    // A. Inicio del día (00:00:00.000)
+	    
 	    calendar.setTime(rideDate);
 	    calendar.set(Calendar.HOUR_OF_DAY, 0);
 	    calendar.set(Calendar.MINUTE, 0);
@@ -62,18 +59,16 @@ public class DataAccess {
 	    calendar.set(Calendar.MILLISECOND, 0);
 	    Date startDate = calendar.getTime();
 	    
-	    // B. Fin del día (23:59:59.999)
+	    
+	    calendar.setTime(rideDate);
 	    calendar.set(Calendar.HOUR_OF_DAY, 23);
 	    calendar.set(Calendar.MINUTE, 59);
 	    calendar.set(Calendar.SECOND, 59);
 	    calendar.set(Calendar.MILLISECOND, 999);
 	    Date endDate = calendar.getTime();
 	    
-	    // ***************************************************************
-	    
 	    try {
-	        // 2. MODIFICACIÓN DE LA CONSULTA HQL
-	        // Filtramos por la fecha que caiga ENTRE (>=) startDate y (<=) endDate
+	     
 	        TypedQuery<Ride> query = db.createQuery(
 	            "SELECT r FROM Ride r WHERE r.departing=:departing AND r.arrival=:arrival AND r.date >= :startDate AND r.date <= :endDate",
 	            Ride.class);
@@ -81,8 +76,8 @@ public class DataAccess {
 	        return query
 	            .setParameter("departing", departing)
 	            .setParameter("arrival", arrival)
-	            .setParameter("startDate", startDate) // Usamos la fecha de inicio del día
-	            .setParameter("endDate", endDate)     // Usamos la fecha de fin del día
+	            .setParameter("startDate", startDate) 
+	            .setParameter("endDate", endDate) // <--- ¡Línea corregida y añadida!
 	            .getResultList();
 	            
 	    } catch (Exception e) {
@@ -111,25 +106,18 @@ public class DataAccess {
 	    return query.getResultList();
 	}
 
-	// Dentro de tu capa de Lógica de Negocio o DataAccess
-
 	public Ride createRide(String from, String to, Date date, int nPlaces, float price, String driverEmail)
 	        throws RideAlreadyExistException, RideMustBeLaterThanTodayException {
 	    
 	    if (from == null || to == null || date == null || nPlaces <= 0 || price < 0 || driverEmail == null)
 	        return null;
 	    
-	    // 1. Verificar que la fecha sea posterior a hoy
 	    if (new Date().compareTo(date) > 0) {
 	        throw new RideMustBeLaterThanTodayException("Ride date must be later than today");
 	    }
 	    
 	    db.getTransaction().begin();
-	    
-	    // ***************************************************************
-	    // 2. CORRECCIÓN CLAVE: Verificar si el viaje ya existe en TODA la BD
-	    //    Usando los nombres de propiedad correctos: 'departing' y 'arrival'
-	    // ***************************************************************
+	
 	    TypedQuery<Ride> query = db.createQuery(
 	        "SELECT r FROM Ride r WHERE r.departing=:from_city AND r.arrival=:to_city AND r.date=:date", Ride.class);
 	    
@@ -139,10 +127,10 @@ public class DataAccess {
 	    
 	    if (!query.getResultList().isEmpty()) {
 	        db.getTransaction().rollback();
-	        // Lanzamos la excepción para informar al Bean JSF
+	    
 	        throw new RideAlreadyExistException("Ya existe un viaje con esta ruta y fecha.");
 	    }
-	    // ***************************************************************
+	  
 
 	    Driver driver = db.find(Driver.class, driverEmail);
 	    if (driver == null) {
@@ -151,13 +139,11 @@ public class DataAccess {
 	        return null;
 	    }
 
-	    // Ya no es estrictamente necesario verificar driver.doesRideExists si la verificación global es suficiente.
-	    // Si mantienes la línea driver.doesRideExists(from, to, date), asegúrate de que use las propiedades correctas internamente.
+	   
 	    
 	    Ride ride = driver.addRide(from, to, date, price, nPlaces);
 	    
-	    // Es mejor persistir el Ride directamente si se usa la persistencia en cascada, 
-	    // pero mantenemos la tuya si funciona con la asociación Driver-Ride.
+	   
 	    db.persist(driver); 
 	    db.getTransaction().commit();
 	    
@@ -172,35 +158,28 @@ public class DataAccess {
 	        return null;
 	    try {
 	        
-	        // *******************************************************************
-	        // MODIFICACIÓN CLAVE: Buscamos por email en Driver Y Traveler
-	        // *******************************************************************
-	        
-	        // 1. Verificar si ya existe como Driver
+	      
 	        TypedQuery<Driver> driverQuery = db.createQuery(
 	            "SELECT d FROM Driver d WHERE d.email=:email", Driver.class);
 	        driverQuery.setParameter("email", email);
 	        
 	        boolean driverExists = !driverQuery.getResultList().isEmpty();
 	        
-	        // 2. Verificar si ya existe como Traveler
 	        TypedQuery<Traveler> travelerQuery = db.createQuery(
 	            "SELECT t FROM Traveler t WHERE t.email=:email", Traveler.class);
 	        travelerQuery.setParameter("email", email);
 	        
 	        boolean travelerExists = !travelerQuery.getResultList().isEmpty();
 	        
-	        // Si existe en cualquiera de las dos tablas, lanzar la excepción
+	       
 	        if (driverExists || travelerExists) {
 	            throw new ErabiltzaileaDagoenekoErregistratutaException("Already exists a user with the same email");
 	        }
 	        
-	        // *******************************************************************
-	        // Fin de la modificación para verificación
-	        // *******************************************************************
+	      
 	        
 	        db.getTransaction().begin();
-	        // Si no existe, crear el nuevo usuario
+	      
 	        User newUser;
 	        if (isDriver) {
 	            newUser = new Driver(email, password, name, surname);
@@ -212,7 +191,7 @@ public class DataAccess {
 	        return newUser;
 	        
 	    } catch (ErabiltzaileaDagoenekoErregistratutaException e) {
-	        // Manejar la excepción específica (no necesitamos el rollback aquí si ya salimos antes)
+	       
 	        if (db.getTransaction().isActive()) {
 	            db.getTransaction().rollback();
 	        }
@@ -275,7 +254,7 @@ public class DataAccess {
 		db.getTransaction().begin();
 
 		try {
-			// Egiaztatu ea jadanik datuak badauden
+			
 			Long driverCount = db.createQuery("SELECT COUNT(d) FROM Driver d", Long.class)
 					.getSingleResult();
 			
@@ -294,21 +273,21 @@ public class DataAccess {
 			if (month==12) { month=1; year+=1;}  
 			
 			//Create drivers 
-			Driver driver1=new Driver("driver1@gmail.com","abc123", "Ane", "Gaztañaga");
-			Driver driver2 = new Driver("1","1","1","1");
-			Driver driver3 = new Driver("driver3@gmail.com", "pass", "Test driver", "test");
+			Driver driver1=new Driver("driver198@gmail.com","abc123", "Ane", "Gaztañaga");
+			Driver driver2 = new Driver("driver1982332@gmail.com","1dfasd","Ane","Ane");
+			Driver driver3 = new Driver("driver3343@gmail.com", "pass", "Test driver", "test");
 			
 			//Create traveler
-			Traveler traveler1 = new Traveler("2","2","2","2");
-			Traveler traveler2 = new Traveler("3","3","3","3");
+			Traveler traveler1 = new Traveler("traveler198324233@gmail.com","2adsfds","Patxi","Arruabarrena");
+			Traveler traveler2 = new Traveler("traveler198@gmail.com","3gfsdd324","Izel","Goikoetxea");
 			
 			Date data = new Date();
 			Calendar cal = Calendar.getInstance();
 			cal.set(2025, 5, 20);
 			data = cal.getTime();
-			Ride r = driver2.addRide("Donostia", "Bilbo", UtilDate.trim(data), 4.99, 5);
+			Ride r = driver2.addRide("Donostia", "Bilbo", UtilDate.trim(data), 5.00, 5);
 						
-			Ride r2 = driver2.addRide("Usurbil", "Donosti", UtilDate.trim(data), 2.99, 5);
+			Ride r2 = driver2.addRide("Usurbil", "Donosti", UtilDate.trim(data), 3.00, 5);
 			
 			db.persist(driver1);
 			db.persist(driver2);

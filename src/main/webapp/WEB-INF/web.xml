@@ -47,19 +47,19 @@
 	<!-- ViewExpiredException kudeatzeko -->
 	<error-page>
 		<exception-type>jakarta.faces.application.ViewExpiredException</exception-type>
-		<location>/Menu.xhtml</location>
+		<location>/ERROR.xhtml</location>
 	</error-page>
 
 	<!-- 404 erroreak kudeatzeko (aukerakoa) -->
 	<error-page>
 		<error-code>404</error-code>
-		<location>/Menu.xhtml</location>
+		<location>/ERROR.xhtml</location>
 	</error-page>
 
 	<!-- 500 erroreak kudeatzeko (aukerakoa) -->
 	<error-page>
 		<error-code>500</error-code>
-		<location>/Menu.xhtml</location>
+		<location>/ERROR.xhtml</location>
 	</error-page>
 
 	<!-- Hasierako JSFak -->

@@ -20,7 +20,7 @@ import jakarta.inject.Named;
 public class CreateRideBean {
 
 	@Inject
-	private AuthBean rides; // Driver email lortzeko
+	private AuthBean rides;
 
 	private String from;
 	private String to;
@@ -32,8 +32,6 @@ public class CreateRideBean {
 	private List<String> gertaerak;
 
 	
-	// Getters eta setters
-	// =====================================================
 	public String getFrom() {
 		return from;
 	}
@@ -84,39 +82,32 @@ public class CreateRideBean {
 
 	public List<String> getGertaerak() {
 		if (FacadeBean.getBusinessLogic() != null) {
-			gertaerak = FacadeBean.getBusinessLogic().getDepartCities(); // Irteera hiriak eskuratu
+			gertaerak = FacadeBean.getBusinessLogic().getDepartCities();
 		}
 		return gertaerak;
 	}
 	
 
-	// Bidaia sortzeko metodoa
-	// =====================================================
-	// Dentro de tu CreateRideBean.java
+	
 	public String createRideAction() {
 	    try {
-	        // Asumo que 'rides' es un objeto que te da el email del conductor logueado.
-	        // **IMPORTANTE: Si 'rides' es una lista/objeto Ride, debes obtener el email
-	        // del conductor logueado de otra fuente (ej. AuthBean).**
+	       
 	        email = rides.getEmail(); 
 	        
 	        Ride ride = FacadeBean.getBusinessLogic().createRide(from, to, data, seats, price, email);
 
 	        if (ride != null) {
-	            // 1. Limpiar los campos después del éxito
+	          
 	            from = "";
 	            to = "";
-	            data = null; // Limpiar la fecha (crucial)
+	            data = null; 
 	            seats = 0;
 	            price = 0;
-	            // email = ""; // No limpiar el email del conductor
 
-	            // 2. Mostrar el mensaje de éxito
 	            FacesContext.getCurrentInstance().addMessage(null,
 	                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Bidaia sortuta", "Bidaia sortu da!"));
 	            
-	            // 3. CLAVE: Devolver null para permanecer en la misma vista (POST/GET)
-	            return null; // NO redirige, solo recarga la vista.
+	            return null; 
 	        } else {
 	            FacesContext.getCurrentInstance().addMessage(null,
 	                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Errorea", "Ezin izan da bidaia sortu"));
@@ -130,7 +121,6 @@ public class CreateRideBean {
 	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Errorea", "Bidaia lehenagotik existitzen da!"));
 	    }
 
-	    // Si hay un error, devolver null para recargar la vista con los mensajes de error
 	    return null; 
 	}
 }
